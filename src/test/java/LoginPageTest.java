@@ -1,4 +1,4 @@
-import API.UserAPI;
+import api.UserAPI;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
@@ -14,10 +14,10 @@ import static test_data.UserRequestTestData.getUserRequestWithCorrectPassword;
 
 public class LoginPageTest extends BaseUITest{
 
-    UserRequest userRequest;
-    UserAPI userAPI;
-    LoginPage loginPage;
-    PersonalAccountPage personalAccountPage;
+    private UserRequest userRequest;
+    private UserAPI userAPI;
+    private LoginPage loginPage;
+    private PersonalAccountPage personalAccountPage;
 
     @Before
     public void setup() {
@@ -26,20 +26,20 @@ public class LoginPageTest extends BaseUITest{
         loginPage = new LoginPage(driver);
         personalAccountPage = new PersonalAccountPage(driver);
         userRequest = getUserRequestWithCorrectPassword();
-        userAPI.create(userRequest);
+        userAPI.createUser(userRequest);
     }
 
     @After
     public void teardown() {
         LoginRequest loginRequest = new LoginRequest(userRequest.getEmail(), userRequest.getPassword());
-        Response response = userAPI.login(loginRequest);
+        Response response = userAPI.userLogin(loginRequest);
         String accessToken = response
-                .then()
-                .extract()
-                .path("accessToken");
+           .then()
+           .extract()
+           .path("accessToken");
 
         if (accessToken != null) {
-            userAPI.delete(accessToken);
+            userAPI.deleteUser(accessToken);
         }
         driver.quit();
     }

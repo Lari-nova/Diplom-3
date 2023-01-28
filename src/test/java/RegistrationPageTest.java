@@ -1,4 +1,4 @@
-import API.UserAPI;
+import api.UserAPI;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
@@ -18,7 +18,7 @@ public class RegistrationPageTest extends BaseUITest {
 
     private UserRequest userRequest;
     private RegistrationPage registrationPage;
-    LoginPage loginPage;
+    private LoginPage loginPage;
 
     @Before
     public void setup() {
@@ -31,13 +31,13 @@ public class RegistrationPageTest extends BaseUITest {
     public void teardown() {
         UserAPI userAPI = new UserAPI();
         LoginRequest loginRequest = new LoginRequest(userRequest.getEmail(), userRequest.getPassword());
-        Response response = userAPI.login(loginRequest);
+        Response response = userAPI.userLogin(loginRequest);
         String accessToken = response
-                .then()
-                .extract()
-                .path("accessToken");
+           .then()
+           .extract()
+           .path("accessToken");
         if (accessToken != null) {
-            userAPI.delete(accessToken);
+            userAPI.deleteUser(accessToken);
         }
         driver.quit();
     }
